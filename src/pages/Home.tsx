@@ -1,9 +1,18 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
+import React, { useState } from 'react';
+const { Camera } = Plugins;
 
 const Home: React.FC = () => {
+  const [pictureSrc, setPictureSrc] = useState('');
+  const handleClick = async () => {
+    const photo = await Camera.getPhoto({
+      allowEditing: true,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+    });
+    setPictureSrc(photo.webPath);
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -11,13 +20,9 @@ const Home: React.FC = () => {
           <IonTitle>Blank</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+      <IonContent className="ion-padding">
+        <IonButton expand="block" onClick={handleClick}>Take Picture</IonButton>
+        <img src={pictureSrc} alt="" />
       </IonContent>
     </IonPage>
   );
